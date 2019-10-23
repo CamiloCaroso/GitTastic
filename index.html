@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
+        <style>
+            #search{
+                background: black;
+                border: solid 0px black;
+                border-bottom: solid 2px white;
+                border-left: solid 2px white;
+                color: white;
+                font-size: 30px;
+                padding-left: 15px;
+                padding-bottom: 5px;
+
+            }
+            #search:focus{
+                outline: none;
+            }
+
+            body{
+                margin-left: 8%;
+                background: black;
+                text-align: center;
+                font-family:'Nunito', sans-serif;;
+            }
+            #holder{
+                margin-bottom: 60px;
+            }
+            .imge{
+                position: relative;
+                width: 20%;
+                height: 220px;
+                margin: 15px;
+                border-radius: 20px;
+                box-shadow: 0px 0px 10px 0px white;
+                transition: 0.5s;
+                
+
+            }
+            .imge:hover {
+                -webkit-transform: scale(1.5); 
+                -ms-transform: scale(1.5); 
+                transform: scale(1.5);
+                z-index:100;
+                
+            }
+            #bt{
+                height: 42px;
+                background: black;
+                border: solid 2px white;
+                color: white;
+                outline: none;
+                
+            }
+            #bt:hover{
+                transition: 0.5s;
+                background: white;
+                border: solid 2px black;
+                color: black;
+            }
+            #bt:active{
+                transition: 0s;
+                outline: 5px solid grey;
+                outline-offset: -5px;
+            }
+            #container{
+                margin-top:20px ;
+                margin-bottom: 20px;
+            }
+
+
+
+            .sidenav {
+                height: 100%;
+                width: 100px;
+                position: fixed;
+                z-index: 999;
+                top: 0;
+                left: 0;
+                background-color: white;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+                border-right: solid 10px grey;
+                
+            }
+            .btSide{
+                width: 100%;
+                padding: 10px;
+                border: solid 0px;
+                border-bottom:  solid 1px black;
+                background: white;
+                text-align: left;
+                transition: 0.5s;
+
+            }
+            .btSide:hover{
+                padding-left: 40%;
+                
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div id="container">
+        <input id="search" type="text" placeholder="Type of GIF">
+        <button id="bt">Search</button>
+        </div>
+
+        <div class="sidenav">
+            <p id="popular">Popular</p>
+            <button class="btSide">Cats</button>
+            <button class="btSide">Music</button>
+            <button class="btSide">Sports</button>
+            <button class="btSide">Entertaiment</button>
+            <p id="history">History</p>
+            
+        </div>
+        
+        <div id="holder"></div>
+            
+        </div>
+
+
+        <script>
+           
+        const div = document.getElementById("holder")
+        const click = document.getElementById("bt")
+        
+        
+
+
+        let urlGif;
+
+        click.addEventListener('click', function(){
+            const search = document.getElementById("search").value;
+            changeUrl(search)
+            runSearch();
+        })
+
+        function changeUrl(response){
+        urlGif = "https://api.giphy.com/v1/gifs/random?api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&tag="+response
+        }
+
+        function runSearch(){
+        for (let i = 0; i < 20; i++){
+            fetch(urlGif).then(function(response) {
+                return response.json();
+                }).then(function(response) {
+
+                    
+                    const imageUrlStill = response.data.images.original_still.url;
+                    const imageUrlGif = response.data.images.original.url;
+                    const imageSize = response.data.images.original_still.width;
+                
+                    const image = document.createElement("img");
+                    image.setAttribute('src', imageUrlStill);
+                    image.className = "imge"
+                    div.prepend(image)
+
+                    
+                    
+                    
+                    image.addEventListener('mouseover', function(){
+                        image.style.boxShadow = "0px 0px 50px 0px green"
+                        image.setAttribute('src', imageUrlGif);
+                    })
+                    image.addEventListener('mouseout', function(){
+                        image.style.boxShadow = "0px 0px 10px 0px white"
+                        image.setAttribute('src', imageUrlStill);
+                    })
+
+                    console.log(response)
+                    
+                        
+
+            
+            });
+        }
+        }   
+        </script>
+    </body>
+</html>
